@@ -1,0 +1,16 @@
+# Adventure PDFs are copyrighted — keep them local, never commit them.
+books/*.pdf
+books/*.PDF
+
+# Extracted-text cache (regenerates on demand)
+.cache/
+
+# API keys (ElevenLabs TTS)
+.env
+.claude/skills/solo-dm/.env
+
+# Node
+node_modules/
+
+# Generated audio
+*.mp3
