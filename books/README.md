@@ -13,10 +13,10 @@ books/
 Any filename works. Reference a book by number or by any unique part of its name:
 
 ```bash
-./tools/candlekeep.py list
-./tools/candlekeep.py toc phandelver
-./tools/candlekeep.py pages phandelver -p "21-23"
-./tools/candlekeep.py search phandelver "Klarg"
+uv run tools/candlekeep.py list
+uv run tools/candlekeep.py toc phandelver
+uv run tools/candlekeep.py pages phandelver -p "21-23"
+uv run tools/candlekeep.py search phandelver "Klarg"
 ```
 
 **A note on sourcing:** use PDFs you have legitimately purchased — the D&D Beyond

@@ -23,14 +23,14 @@ unmodified goblin ambush dies, and the campaign ends on page one. See
 
 1. Confirm the adventure book is available:
    ```bash
-   ./tools/candlekeep.py list
+   uv run tools/candlekeep.py list
    ```
    If no books are listed, tell the player to drop a PDF they own into `books/` and stop.
    Do **not** attempt to run the adventure from memory — see [Sourcing](#sourcing-the-adventure).
 
 2. Read the structure before narrating anything:
    ```bash
-   ./tools/candlekeep.py toc <book>
+   uv run tools/candlekeep.py toc <book>
    ```
 
 3. Check for an existing campaign in `campaigns/`. If one exists, resume it (below).
@@ -46,7 +46,7 @@ When the player says "continue" or names a campaign:
 3. `cat campaigns/<name>/character-*.md` — current HP, resources, inventory, XP
 4. Read ahead 1-2 encounters in the book so you know what is coming:
    ```bash
-   ./tools/candlekeep.py pages <book> -p "<next-section>"
+   uv run tools/candlekeep.py pages <book> -p "<next-section>"
    ```
 5. Recap in 2-3 sentences, remind them of their situation, then ask what they do.
 
@@ -59,9 +59,9 @@ Keep the recap tight and in-fiction where possible. Lead with the cliffhanger, n
 **Always query the book. Never run published content from training data.**
 
 ```bash
-./tools/candlekeep.py toc <book>                    # structure
-./tools/candlekeep.py pages <book> -p "21-23"       # exact text of an encounter
-./tools/candlekeep.py search <book> "Klarg"         # find a name, room, or item
+uv run tools/candlekeep.py toc <book>                    # structure
+uv run tools/candlekeep.py pages <book> -p "21-23"       # exact text of an encounter
+uv run tools/candlekeep.py search <book> "Klarg"         # find a name, room, or item
 ```
 
 Query the book for: room descriptions, monster stat blocks, NPC motivations and dialogue,

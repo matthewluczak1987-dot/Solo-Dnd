@@ -147,22 +147,38 @@ function listVoices() {
 
 async function playAudio(audioPath) {
   return new Promise((resolve, reject) => {
-    // Try afplay (macOS), then ffplay, then mpg123
-    const players = ['afplay', 'ffplay -nodisp -autoexit', 'mpg123'];
+    // Windows has no bundled command-line mp3 player, so drive the WPF
+    // MediaPlayer through PowerShell instead. Present on any supported
+    // Windows install, so this needs nothing extra from the user.
+    if (process.platform === 'win32') {
+      const escaped = audioPath.replace(/'/g, "''");
+      const ps = [
+        'Add-Type -AssemblyName presentationCore;',
+        '$p = New-Object System.Windows.Media.MediaPlayer;',
+        `$p.Open([uri]'${escaped}');`,
+        // Open() is async; wait for the duration to become known.
+        '$n = 0;',
+        'while (-not $p.NaturalDuration.HasTimeSpan -and $n -lt 100) { Start-Sleep -Milliseconds 50; $n++ };',
+        '$p.Play();',
+        'if ($p.NaturalDuration.HasTimeSpan) {',
+        '  Start-Sleep -Milliseconds ([int]$p.NaturalDuration.TimeSpan.TotalMilliseconds + 400)',
+        '} else { Start-Sleep -Seconds 5 };',
+        '$p.Close();',
+      ].join(' ');
 
-    let player = players[0];
-    if (process.platform === 'darwin') {
-      player = 'afplay';
-    } else if (process.platform === 'linux') {
-      player = 'mpg123';
+      const winProc = spawn('powershell', ['-NoProfile', '-Command', ps], {
+        stdio: 'ignore',
+      });
+      winProc.on('close', (code) =>
+        code === 0 ? resolve() : reject(new Error(`Audio player exited with code ${code}`)));
+      winProc.on('error', reject);
+      return;
     }
 
-    const proc = spawn(player.split(' ')[0], [
-      ...player.split(' ').slice(1),
-      audioPath
-    ], {
-      stdio: 'ignore'
-    });
+    // macOS ships afplay; Linux needs mpg123 (or ffplay) installed.
+    const player = process.platform === 'darwin' ? 'afplay' : 'mpg123';
+
+    const proc = spawn(player, [audioPath], { stdio: 'ignore' });
 
     proc.on('close', (code) => {
       if (code === 0) {

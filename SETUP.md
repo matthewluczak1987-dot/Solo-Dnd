@@ -27,14 +27,14 @@ Drop a PDF of an adventure you own into `books/`:
 
 ```bash
 cp ~/Downloads/lost-mine-of-phandelver.pdf books/
-./tools/candlekeep.py list
+uv run tools/candlekeep.py list
 ```
 
 You should see the book listed. Then confirm text extraction works:
 
 ```bash
-./tools/candlekeep.py toc phandelver
-./tools/candlekeep.py search phandelver "Cragmaw"
+uv run tools/candlekeep.py toc phandelver
+uv run tools/candlekeep.py search phandelver "Cragmaw"
 ```
 
 If pages come back empty, the PDF is a scan with no text layer — run it through
@@ -93,3 +93,8 @@ three fixes that were needed to make it run:
    skill now carries an encounter-rescaling table, sidekick guidance, and safety nets.
 3. **Campaign state moved** from `.claude/skills/dnd-dm/sessions/` to `campaigns/`,
    so saves are ordinary tracked files rather than buried inside a skill directory.
+4. **Cross-platform fixes.** Book-tool calls use `uv run tools/candlekeep.py`
+   rather than `./tools/candlekeep.py`, since shebang execution doesn't work on
+   Windows. `speak-npc.js` gained a Windows audio path — it previously fell
+   through to `afplay`, a macOS-only program, on any non-Mac non-Linux platform.
+   The missing `.env.example` the original skill told you to copy now exists.
